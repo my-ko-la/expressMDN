@@ -48,8 +48,8 @@ function authorCreate(first_name, family_name, d_birth, d_death, cb) {
   });
 }
 
-function genreCreate(name, cb) {
-  var genre = new Genre({ name: name });
+function genreCreate(name, fiction, cb) {
+  var genre = new Genre({ name: name, fiction: fiction });
 
   genre.save(function (err) {
     if (err) {
@@ -123,13 +123,13 @@ function createGenreAuthors(cb) {
         authorCreate("Jim", "Jones", "1971-12-16", false, callback);
       },
       function (callback) {
-        genreCreate("Fantasy", callback);
+        genreCreate("Fantasy", true, callback);
       },
       function (callback) {
-        genreCreate("Science Fiction", callback);
+        genreCreate("Science Fiction", true, callback);
       },
       function (callback) {
-        genreCreate("French Poetry", callback);
+        genreCreate("French Poetry", true, callback);
       },
     ],
     // optional callback

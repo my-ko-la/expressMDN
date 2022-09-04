@@ -5,7 +5,7 @@ var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 const mongoose = require("mongoose");
 
-const mongoDB = "ac-0k9v6kk-shard-00-01.md4vpkj.mongodb.net:27017";
+const mongoDB = "mongodb+srv://mykocaine:fukkkpasswordtesting1@cluster0.md4vpkj.mongodb.net/test";
 
 mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true });
 const db = mongoose.connection;

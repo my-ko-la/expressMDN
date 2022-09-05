@@ -8,7 +8,7 @@ block content
 
     h4 Books
 
-    dl
+    d1
       each book in genre_books
         dt
           a(href=book.url) #{book.title}
@@ -17,5 +17,8 @@ block content
       else
         p This genre has no books
 
-  hr
-  a(href=genre.url+'/delete') Delete Genre
+    hr
+    p
+      a(href=genre.url+'/update') Update genre
+    p
+      a(href=genre.url+'/delete') Delete genre

@@ -180,12 +180,94 @@ exports.author_delete_post = (req, res, next) => {
   );
 };
 
-// Display Author update form on GET.
-exports.author_update_get = (req, res) => {
-  res.send("NOT IMPLEMENTED: Author update GET");
+// Display Author update form on GET
+exports.author_update_get = function (req, res, next) {
+  async.parallel(
+    {
+      author: function (callback) {
+        Author.findById(req.params.id)
+          // .populate("book")
+          // .populate("genre")
+          .exec(callback);
+      },
+      // books: function (callback) {
+      //   Book.find(callback);
+      // },
+      // genres: function (callback) {
+      //   genre.find(callback);
+      // },
+    },
+    function (err, results) {
+      if (err) return next(err);
+      if (results.author == null) {
+        // No Results
+        var err = new Error("Author not found");
+        err.status = 404;
+        return next(err);
+      }
+
+      res.render("author_form", {
+        title: "Update Author",
+        author: results.author,
+      });
+    }
+  );
 };
 
-// Handle Author update on POST.
-exports.author_update_post = (req, res) => {
-  res.send("NOT IMPLEMENTED: Author update POST");
-};
+// Handle Author update on POST
+exports.author_update_post = [
+  // Validate and sanitize fields
+  body("first_name", "First Name must not be empty.")
+    .trim()
+    .isLength({ min: 1 })
+    .escape(),
+  body("family_name", "Family Name must not be empty.")
+    .trim()
+    .isLength({ min: 1 })
+    .escape(),
+  body("date_of_birth", "Date of Birth must not be empty.")
+    .trim()
+    .isLength({ min: 1 })
+    .escape(),
+  // body("date_of_death", "Date of Death must not be empty.")
+  //   .trim()
+  //   .isLength({ min: 1 })
+  //   .escape(),
+
+  // Process request after validation and saniization
+  (req, res, next) => {
+    // Extract the validation errors from request
+    const errors = validationResult(req);
+
+    // Create an objet with escaped/trimmed data and old id
+    var author = new Author({
+      first_name: req.body.first_name,
+      family_name: req.body.family_name,
+      date_of_birth: req.body.date_of_birth,
+      date_of_death: req.body.date_of_death,
+      _id: req.params.id,
+    });
+    if (!errors.isEmpty()) {
+      // There are errors. Render form again with Sanitized values
+
+      // Get all authors and genres for form
+      res.render("author_form", {
+        title: "Update Author",
+        author: author,
+        errors: errors.array(),
+      });
+      return;
+    } else {
+      Author.findByIdAndUpdate(
+        req.params.id,
+        author,
+        {},
+        function (err, theauthor) {
+          if (err) return next(err);
+
+          res.redirect(theauthor.url);
+        }
+      );
+    }
+  },
+];

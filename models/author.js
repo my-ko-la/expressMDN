@@ -24,9 +24,19 @@ AuthorSchema.virtual("url").get(function () {
 });
 
 AuthorSchema.virtual("lifespan").get(function () {
-  return this.date_of_birth
-    ? DateTime.fromJSDate(this.date_of_birth).toLocaleString(DateTime.DATE_MED)
-    : "";
+  if (!this.date_of_birth) {
+    return "Information not available";
+  }
+
+  return this.date_of_death
+    ? `${DateTime.fromJSDate(this.date_of_birth).toLocaleString(
+        DateTime.DATE_MED
+      )} - ${DateTime.fromJSDate(this.date_of_death).toLocaleString(
+        DateTime.DATE_MED
+      )}`
+    : `${DateTime.fromJSDate(this.date_of_birth).toLocaleString(
+        DateTime.DATE_MED
+      )} - Present`;
 });
 
 module.exports = mongoose.model("Author", AuthorSchema);

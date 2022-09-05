@@ -185,17 +185,8 @@ exports.author_update_get = function (req, res, next) {
   async.parallel(
     {
       author: function (callback) {
-        Author.findById(req.params.id)
-          // .populate("book")
-          // .populate("genre")
-          .exec(callback);
+        Author.findById(req.params.id).exec(callback);
       },
-      // books: function (callback) {
-      //   Book.find(callback);
-      // },
-      // genres: function (callback) {
-      //   genre.find(callback);
-      // },
     },
     function (err, results) {
       if (err) return next(err);
@@ -229,10 +220,6 @@ exports.author_update_post = [
     .trim()
     .isLength({ min: 1 })
     .escape(),
-  // body("date_of_death", "Date of Death must not be empty.")
-  //   .trim()
-  //   .isLength({ min: 1 })
-  //   .escape(),
 
   // Process request after validation and saniization
   (req, res, next) => {
